@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\Dashboard;
+use App\Http\Controllers\Admin\Kategori;
+use App\Http\Controllers\Admin\Products;
 use App\Http\Controllers\Costumer\Costumer;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -13,12 +15,20 @@ Route::get('/', function () {
 });
 
 
-
-
 Route::middleware('auth')->group(function () {
     Route::get('Dashboard', [Dashboard::class, 'dashboardPage'])->name('dashboard');
 
     Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumer');
+
+    Route::get('Kategori', [Kategori::class, 'kategoriPage'])->name('kategori');
+    Route::post('AddKategori', [Kategori::class, 'AddKategori'])->name('addKategori');
+    Route::put('EditKategori/{id}/edit', [Kategori::class, 'editKategori'])->name('editKategori');
+    Route::delete('DeleteKategori/{id}/delete', [Kategori::class, 'deleteKategori'])->name('deleteKategori');
+
+    Route::get('Products', [Products::class, 'productsPage'])->name('products');
+    Route::post('Products', [Products::class, 'addProduct'])->name('addProduct');
+    Route::post('Products/{id}/edit', [Products::class, 'editProduct'])->name('editProduct');
+    Route::delete('Products/{id}/delete', [Products::class, 'deleteProduct'])->name('deleteProduct');
 });
 
 require __DIR__ . '/auth.php';

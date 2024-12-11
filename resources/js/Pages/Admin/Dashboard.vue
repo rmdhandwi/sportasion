@@ -7,9 +7,9 @@ import TemplateAdmin from "@/Layouts/TemplateAdmin.vue";
 const props = defineProps({
     flash: Object,
     auth: Object,
+    title: String,
 });
 
-const auth = props.auth;
 
 // Fungsi untuk menampilkan notifikasi jika ada pesan flash
 const toast = useToast();
@@ -50,23 +50,10 @@ const refresh = () => {
         });
     });
 };
-
-// Fungsi logout
-const Logout = () => {
-    router.post(route("logout"), {
-        onSuccess: () => {
-            // Redirect setelah logout sukses
-            router.visit(route("login"));
-        },
-        onError: () => {
-            ShowToast(); // Menampilkan notifikasi jika terjadi kesalahan
-        },
-    });
-};
 </script>
 
 <template>
-    <TemplateAdmin :auth="auth">
+    <TemplateAdmin :auth="props.auth" :title="props.title">
         <template #content>
             <Toast group="tc" />
             <h2>Ini Costumer</h2>
