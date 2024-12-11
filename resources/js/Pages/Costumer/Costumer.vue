@@ -1,11 +1,4 @@
 <script setup>
-<<<<<<< HEAD
-</script>
-
-<template>
-  <h2>ini costumeer</h2>
-</template>
-=======
 import { Head } from '@inertiajs/vue3'
 
 import { 
@@ -54,4 +47,3 @@ import Layout from '@/Layouts/TemplateCustomer.vue'
 
 <style scoped>
 </style>
->>>>>>> 2072cb0ba41e4570875ec7819c3833f4392b2959
