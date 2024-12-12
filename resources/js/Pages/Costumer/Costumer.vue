@@ -25,6 +25,7 @@ onMounted(() =>
 
 const props = defineProps({
     dataKategori : Object,
+    dataTransaksi : Object,
     dataProduk : Object,
     dataCart : Object,
     flash : Object,
@@ -32,8 +33,9 @@ const props = defineProps({
 
 const dataCart = props.dataCart
 const dataKategori = props.dataKategori
+const dataTransaksi = props.dataTransaksi
 
-provide('dataProps',{dataCart, dataKategori})
+provide('dataProps',{dataCart, dataKategori, dataTransaksi })
 
 const confirm = useConfirm()
 const toast = useToast()

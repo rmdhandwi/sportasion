@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3000
--- Generation Time: Dec 12, 2024 at 01:51 PM
+-- Generation Time: Dec 12, 2024 at 05:06 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.26
 
@@ -83,7 +83,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `id_user`, `order_date`, `status`, `total_price`, `created_at`, `updated_at`) VALUES
-(11, 3, '2024-12-12 22:49:48', 2, '2000000.00', '2024-12-12 14:49:48', NULL);
+(11, 3, '2024-12-12 22:49:48', 0, '2000000.00', '2024-12-12 14:49:48', NULL),
+(12, 3, '2024-12-13 01:20:57', 0, '1000000.00', '2024-12-12 17:20:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -104,7 +105,8 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`id`, `id_order`, `id_product`, `quantity`, `price`) VALUES
-(11, 11, 6, 2, '1000000.00');
+(11, 11, 6, 2, '1000000.00'),
+(12, 12, 7, 1, '1000000.00');
 
 -- --------------------------------------------------------
 
@@ -152,7 +154,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('YXH5i16GBdmYLmNgtWC7fbCqevtTXqQhfGSU0udi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiYjFhTHhIQ211VEdzN1Z1QzdSRElPWVdVb0RRRDJWTlduMmJ5UTVnVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319fQ==', 1734011415);
+('zjyAI9coXPu2mTJBi3VxTcEfePlixt5VTBGXdXjS', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZHNqVG1MRXhBSGJONjdmbW54dnpYQ0F4a0dtVWwwT2xWWjNOSE9yMyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MztzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO319', 1734022574);
 
 -- --------------------------------------------------------
 
@@ -161,15 +163,23 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 --
 
 CREATE TABLE `transactions` (
-  `id_transaction` bigint UNSIGNED NOT NULL,
+  `id` bigint UNSIGNED NOT NULL,
   `id_order` bigint UNSIGNED NOT NULL,
   `payment_method` enum('bank_transfer','e-wallet') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payment_status` enum('pending','paid','failed') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` decimal(10,2) NOT NULL,
+  `bukti_tf` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` int NOT NULL,
   `payment_date` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `id_order`, `payment_method`, `amount`, `bukti_tf`, `status`, `payment_date`, `created_at`, `updated_at`) VALUES
+(1, 11, 'bank_transfer', '2000000.00', '/storage/uploads/bukti_tf/GFxzC1oDf3-2024-12-13.jpeg', 2, '2024-12-13 01:17:43', '2024-12-12 17:17:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -249,7 +259,7 @@ ALTER TABLE `sessions`
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
-  ADD PRIMARY KEY (`id_transaction`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `transactions_id_order_foreign` (`id_order`);
 
 --
@@ -279,13 +289,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -297,7 +307,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id_transaction` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`

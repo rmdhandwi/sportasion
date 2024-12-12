@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Kategori;
 use App\Http\Controllers\Admin\Products;
 use App\Http\Controllers\Costumer\Costumer;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Transaction\TransactionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::post('Cart/Hapus', [OrderController::class, 'hapusOrder'])->name('cart.hapus');
     Route::post('Cart/Pesan', [OrderController::class, 'pesanOrder'])->name('cart.pesan');
     Route::post('Cart/BatalPesan', [OrderController::class, 'batalOrder'])->name('cart.pesan.batal');
+
+    Route::post('Transaksi/Konfirmasi', [TransactionController::class, 'addTransaction'])->name('transaksi.add');
 
     Route::get('produk/kategori', [Costumer::class, 'kategoriPage'])->name('kategori.page');
 

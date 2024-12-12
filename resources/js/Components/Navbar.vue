@@ -4,12 +4,15 @@ import { router, useForm } from '@inertiajs/vue3'
 import { 
     Button,
     Dialog,
+    FileUpload,
     FloatLabel,
+    Image,
     InputNumber,
     InputText,
     Tag,
+    Select,
     Toast,useToast,
-    useConfirm
+    useConfirm,
 } from 'primevue'
 
 onMounted(()=>
@@ -19,17 +22,31 @@ onMounted(()=>
     })
 })
 const showDialog = ref(false)
+const showDialogTransaksi = ref(false)
+const showBuktiBayar = ref(false)
+const previewImg = ref(null)
 
 const confirm = useConfirm()
 const toast = useToast()
 
-const {dataCart, dataKategori} = inject('dataProps')
+const {dataCart, dataKategori, dataTransaksi} = inject('dataProps')
+
+const metodeBayar = ref([
+    {metode : 'Bank Transfer', value : 'bank_transfer'},
+    {metode : 'E-Wallet', value : 'e-wallet'},
+])
 
 const jmlhPesan = ref({})
 
 const formCart = useForm({
     id_cart : null,
     quantity : null,
+})
+
+const formTransaksi = useForm({
+    id_cart : null,
+    metode_bayar : null,
+    bukti_bayar : null,
 })
 
 const formatTanggal = tanggal =>
@@ -197,18 +214,63 @@ const batalPesan = (id,namaProduk) =>
 }
 
 const kategoriPage = idKategori => {
-    // useForm({id : idKategori}).post(route('kategori.page'),{
-    //     onError : () => refreshPage()
-    // })
     useForm({id : idKategori}).get(route('kategori.page'),{
         onError : () => refreshPage()
     })
-    // router.visit('produk/kategori/'+idKategori)
+}
+
+const submitTransaksi = id => 
+{
+    
+    formTransaksi.id_cart = id 
+
+    confirm.require({
+        message: `Konfirmasi Pembayaran ?`,
+        header: 'Peringatan',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Batal',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptProps: {
+            label: 'Konfirmasi',
+            severity: 'success'
+        },
+        accept: () => {
+            showDialogTransaksi.value = false
+
+            formTransaksi.post(route('transaksi.add'), {
+                onSuccess : refreshPage(),
+                onError : () => { 
+                    toast.add({
+                        severity : 'error',
+                        summary : 'notifikasi',
+                        detail : 'Gagal Konfirmasi pembayaran',
+                        life : 4000,
+                        group : 'tc'
+                    })
+                } 
+            })
+        },
+    })
 }
 
 const dialogHide = () =>  dataCart.forEach((produk) => {
     jmlhPesan.value[produk.id] = produk.order_details[0]['quantity']
 })
+
+const uploadBuktiTF = (event) => 
+{
+    formTransaksi.bukti_bayar = event.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = async (e) => {
+        previewImg.value = e.target.result;
+    };
+
+    reader.readAsDataURL(formTransaksi.bukti_bayar);
+}
 
 const logout = () =>
 {
@@ -236,6 +298,7 @@ const logout = () =>
 <template>
     <Toast position="top-center" group="tc" />
     
+    <!-- dialog keranjang -->
     <Dialog v-model:visible="showDialog" :header="`Keranjang Anda (${dataCart.length.toString()})`" class="w-[52rem]" modal v-on:hide="dialogHide()">
         <form @submit.prevent class="flex gap-4 w-full my-8" autocomplete="off" v-for="cart in dataCart" :key="cart.id">
             <div class="flex flex-col w-[75%] gap-2">
@@ -279,6 +342,65 @@ const logout = () =>
         </form>
     </Dialog>
 
+    <!-- dialog transaksi -->
+    <Dialog v-model:visible="showDialogTransaksi" :header="`Transaksi Anda (${dataTransaksi.length.toString()})`" class="w-[52rem]" modal>
+        <form @submit.prevent class="flex gap-4 my-4" autocomplete="off" v-for="transaksi in dataTransaksi" :key="transaksi.id">
+            <div class="flex flex-col gap-2 w-[90%]">
+                <div class="overflow-hidden rounded-lg">
+                    <img :src="transaksi.order_details[0]['product']['image']">
+                </div>
+                <Tag v-if="transaksi.transaksi.length < 1" value="Silahkan Upload Bukti Pembayaran" severity="warn"/>
+            </div>
+            <div class="flex flex-wrap items-center gap-y-2 gap-x-8">
+                <div class="flex flex-col w-[12rem]">
+                    <FloatLabel variant="on">
+                        <InputText disabled fluid class="w-full" inputId="custom" :modelValue="transaksi.order_details[0]['product']['name']"/>
+                        <label for="custom">Nama Produk</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex flex-col w-[12rem]">
+                    <FloatLabel variant="on">
+                        <InputText disabled fluid class="w-full" inputId="custom" :modelValue="formatTanggal(transaksi.order_date)"/>
+                        <label for="custom">Tanggal Order</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex flex-col w-[12rem]">
+                    <FloatLabel variant="on">
+                        <InputNumber v-model="transaksi.order_details[0]['quantity']" disabled inputId="minmax-buttons" mode="decimal" showButtons :min="1" :max="100" fluid />
+                        <label for="on_label">Jumlah Pesan</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex flex-col w-[12rem]">
+                    <FloatLabel variant="on">
+                        <InputNumber disabled :modelValue="transaksi.total_price" inputId="on_label" mode="currency" currency="IDR" locale="id-ID" fluid />
+                        <label for="on_label">Total Bayar</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex flex-col w-[12rem]">
+                    <FloatLabel variant="on">
+                        <Select fluid class="w-full" :disabled="transaksi.transaksi.length > 0" v-model="formTransaksi.metode_bayar" :options="metodeBayar" optionLabel="metode" optionValue="value" />
+                        <label for="on_label">Metode Pembayaran</label>
+                    </FloatLabel>
+                </div>
+                <div class="flex flex-col w-[12rem]">
+                    <FileUpload mode="basic" auto choose-label="Pilih file"  @uploader="uploadBuktiTF($event)" accept="image/*" customUpload severity="secondary" class="w-full p-button-outlined" :multiple="false" :disabled="!formTransaksi.metode_bayar || transaksi.transaksi.length > 0" fluid/>
+                </div>
+                <Tag v-if="transaksi.transaksi[0]?.status===2" value="Pembayaran Berhasil" severity="success"/>
+                <Button label="Lihat" icon="pi pi-eye" @click="showBuktiBayar = true" severity="success" v-if="formTransaksi.bukti_bayar"/>
+                <div class="flex items-center gap-x-2" v-if="transaksi.transaksi.length < 1">
+                   <Button :disabled="!formTransaksi.bukti_bayar" label="Konfirmasi Pembayaran" @click="submitTransaksi(transaksi.id)" />
+                </div>
+            </div>
+        </form>
+    </Dialog>
+
+    <Dialog v-model:visible="showBuktiBayar" class="flex justify-center gap-2" modal>
+        <span class="text-2xl text-center">Bukti Pembayaran Anda</span>
+        <div class="size-[24rem] overflow-hidden">
+            <Image preview :src="previewImg" fluid class="size-full" />
+        </div>
+    </Dialog>
+
     <nav class="w-full h-[4rem] bg-slate-700 text-white flex justify-between items-center px-4 fixed top-0">
         <!-- brand -->
         <span class="text-2xl">Sportasion</span>
@@ -292,6 +414,7 @@ const logout = () =>
         <!-- logout -->
         <div class="flex items-center gap-x-4">
             <Button severity="secondary" icon="pi pi-shopping-cart" :badge="dataCart.length.toString()" badgeSeverity="success" label="Keranjang" :disabled="dataCart.length < 1" @click="showDialog=true"/>
+            <Button severity="contrast" :badge="dataTransaksi.length.toString()" :disabled="dataTransaksi.length < 1" label="Transaksi" @click="showDialogTransaksi=true"/>
             <Button severity="danger" label="Logout" @click="logout"/>
         </div>  
     </nav>
