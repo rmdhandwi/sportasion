@@ -12,8 +12,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     public $timestamps = false;
     protected $table = 'users';
-    protected $primarykey = 'id';
+    protected $primaryKey = 'id';
     protected $fillable = [
+        'id',
         'name',
         'username',
         'password',
@@ -26,6 +27,6 @@ class User extends Authenticatable
 
     public function orders()
     {
-        $this->hasMany('user_id', 'id');
+        return $this->hasMany(Order::class,'id_user','id');
     }
 }

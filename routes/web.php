@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Dashboard;
 use App\Http\Controllers\Admin\Kategori;
 use App\Http\Controllers\Admin\Products;
 use App\Http\Controllers\Costumer\Costumer;
+use App\Http\Controllers\Order\OrderController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,7 +19,9 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('Dashboard', [Dashboard::class, 'dashboardPage'])->name('dashboard');
 
-    Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumer');
+    Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumerPage');
+    Route::post('Cart/Add', [OrderController::class, 'addOrder'])->name('cart.add');
+    Route::post('Cart/Update', [OrderController::class, 'updateOrder'])->name('cart.update');
 
     Route::get('Kategori', [Kategori::class, 'kategoriPage'])->name('kategori');
     Route::post('AddKategori', [Kategori::class, 'AddKategori'])->name('addKategori');

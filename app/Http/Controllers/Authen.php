@@ -39,7 +39,7 @@ class Authen extends Controller
             // Login pengguna dan regenerasi session
             Auth::login($user);
             $request->session()->regenerate();
-            $username = auth()->user();
+            $username = auth()->guard()->user();
 
             if ($user->role == 1 || $user->role == 2) {
                 return redirect()->route('dashboard')->with([
