@@ -226,7 +226,6 @@ const logout = () =>
             severity: 'danger'
         },
         accept: () => {
-            showDialog.value = false
             router.post(route("logout"))
         },
     })
