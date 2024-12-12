@@ -22,6 +22,11 @@ Route::middleware('auth')->group(function () {
     Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumerPage');
     Route::post('Cart/Add', [OrderController::class, 'addOrder'])->name('cart.add');
     Route::post('Cart/Update', [OrderController::class, 'updateOrder'])->name('cart.update');
+    Route::post('Cart/Hapus', [OrderController::class, 'hapusOrder'])->name('cart.hapus');
+    Route::post('Cart/Pesan', [OrderController::class, 'pesanOrder'])->name('cart.pesan');
+    Route::post('Cart/BatalPesan', [OrderController::class, 'batalOrder'])->name('cart.pesan.batal');
+
+    Route::get('produk/kategori', [Costumer::class, 'kategoriPage'])->name('kategori.page');
 
     Route::get('Kategori', [Kategori::class, 'kategoriPage'])->name('kategori');
     Route::post('AddKategori', [Kategori::class, 'AddKategori'])->name('addKategori');

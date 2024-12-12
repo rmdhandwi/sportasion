@@ -12,6 +12,7 @@ class products extends Model
     protected $table = 'products';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'id',
         'id_category',
         'name',
         'description',
@@ -24,7 +25,7 @@ class products extends Model
 
     public function categories()
     {
-        return $this->belongsTo(categories::class, 'id_category');
+        return $this->belongsTo(categories::class,'id_category');
     }
 
     public function orderDetails()

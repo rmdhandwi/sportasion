@@ -47,7 +47,7 @@ class Authen extends Controller
                     'message'      => 'Selamat Datang.' . $username->username,
                 ]);
             } else {
-                return redirect()->route('costumer')->with([
+                return redirect()->route('costumerPage')->with([
                     'notif_status' => 'success',
                     'message'      => 'Selamat Datang.' . $username->username,
                 ]);
@@ -124,7 +124,7 @@ class Authen extends Controller
         return redirect()->route('login')->with([
             'notif_status' => 'success',
             'message'      => 'Anda telah berhasil logout.',
-            'notif_show'   => true,
+            'notif_show'   => true, 
         ]);
     }
 }

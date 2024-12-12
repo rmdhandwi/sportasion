@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Costumer;
 
 use App\Http\Controllers\Controller;
+use App\Models\categories;
 use App\Models\Order;
 use App\Models\products;
 use App\Models\User;
@@ -15,11 +16,28 @@ class Costumer extends Controller
     {
         $dataCart = Order::where('id_user', auth()->guard()->user()->id)->with('orderDetails.product')->get();
 
-        $dataProduk = products::with('categories')->select('id','name','description','price','image','stock')->get();
+        $dataKategori = categories::select('id','name')->get();
+        $dataProduk = products::with('categories')->get();
+
         return Inertia::render('Costumer/Costumer', [
-            'title' => 'Home',
+            'dataKategori' => $dataKategori,
             'dataProduk' => $dataProduk,
             'dataCart' => $dataCart,
         ]);
+    }
+
+    public function kategoriPage(Request $req)
+    {
+        $dataCart = Order::where('id_user', auth()->guard()->user()->id)->with('orderDetails.product')->get();
+        
+        $dataKategori = categories::select('id', 'name')->get();
+        $dataProduk = products::where('id_category',$req->id)->with('categories')->get();
+
+        return Inertia::render('Costumer/Costumer', [
+            'dataKategori' => $dataKategori,
+            'dataProduk' => $dataProduk,
+            'dataCart' => $dataCart,
+        ]);
+
     }
 }

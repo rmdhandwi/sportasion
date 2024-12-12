@@ -6,10 +6,8 @@ import {
     Button,
     Card,
     useConfirm,
-    Dialog,
     FloatLabel,
     InputNumber,
-    InputText,
     Toast,
     useToast
 } from 'primevue'
@@ -26,12 +24,16 @@ onMounted(() =>
 })
 
 const props = defineProps({
+    dataKategori : Object,
     dataProduk : Object,
     dataCart : Object,
     flash : Object,
 })
 
-provide('dataCartUser', props.dataCart)
+const dataCart = props.dataCart
+const dataKategori = props.dataKategori
+
+provide('dataProps',{dataCart, dataKategori})
 
 const confirm = useConfirm()
 const toast = useToast()
@@ -70,7 +72,6 @@ const refreshPage = () =>
 
 const addCart = id =>
 {
-    // showDialog.value = true
     formCart.id_product = id 
     formCart.quantity = jmlhPesan.value[id]
 
@@ -125,37 +126,12 @@ const formatRupiah = (angka) => {
     <Layout>
         <template #content>
             <Toast position="top-center" group="tc" />
-            <!--Dialog keranjang  -->
-            <!-- <Dialog v-model:visible="showDialog" header="Tambah Produk Ke Keranjang" class="w-[52rem]">
-                <form @submit.prevent class="flex gap-4" autocomplete="off">
-                    <div class="w-1/2 overflow-hidden rounded-lg">
-                        <img :src="formCart.img_product" class="size-full">
-                    </div>
-                    <div class="flex flex-col gap-8 my-1 w-1/2">
-                        <div class="flex flex-col w-full">
-                            <FloatLabel variant="on">
-                                <InputText disabled fluid class="w-full" inputId="custom" v-model="formCart.nama_product"/>
-                                <label for="custom">Nama Produk</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="flex flex-col w-full">
-                            <FloatLabel variant="on">
-                                <InputNumber v-model="formCart.quantity" inputId="minmax-buttons" mode="decimal" showButtons :min="1" :max="100" fluid />
-                                <label for="on_label">Jumlah Pesan</label>
-                            </FloatLabel>
-                        </div>
-                        <div class="flex flex-col w-full">
-                            <FloatLabel variant="on">
-                                <InputNumber disabled :model-value="formCart.price * formCart.quantity" inputId="on_label" mode="currency" currency="IDR" locale="id-ID" fluid />
-                                <label for="on_label">Total Bayar</label>
-                            </FloatLabel>
-                        </div>
-                    </div>
-                </form>
-            </Dialog> -->
 
             <section class="my-[4rem]">
-                <h1 class="text-2xl">Daftar Produk</h1>
+                <h1 class="text-2xl" v-if="dataProduk.length>0">Daftar Produk</h1>
+                <div class="flex justify-center items-center h-[70vh]"v-else>
+                    <h1 class="text-2xl">Tidak ada produk</h1>
+                </div>
                 <div class="grid grid-cols-3 gap-4 py-4">
                     <Card v-for="produk in dataProduk" :key="produk.name" style="width: 18rem;overflow: hidden;">
                         <template #header>
@@ -165,7 +141,10 @@ const formatRupiah = (angka) => {
                             {{ produk.name }}
                         </template>
                         <template #content>
-                            <span>{{ formatRupiah(produk.price) }}</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm">{{ produk.categories.name }}</span>
+                                <span>{{ formatRupiah(produk.price) }}</span>
+                            </div>
                             <div class="flex items-center gap-2 mt-2">
                                 <Button @click="addCart(produk.id)" severity="contrast" icon="pi pi-shopping-cart" size="small" />
                                 <FloatLabel variant="on">

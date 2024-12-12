@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3000
--- Generation Time: Dec 12, 2024 at 05:23 AM
+-- Generation Time: Dec 12, 2024 at 01:51 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.26
 
@@ -83,8 +83,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `id_user`, `order_date`, `status`, `total_price`, `created_at`, `updated_at`) VALUES
-(1, 3, '2024-12-12 00:41:33', 2, '4000000.00', '2024-12-11 16:41:33', NULL),
-(2, 3, '2024-12-12 01:42:38', 2, '3000000.00', '2024-12-11 17:42:38', NULL);
+(11, 3, '2024-12-12 22:49:48', 2, '2000000.00', '2024-12-12 14:49:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -105,8 +104,7 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`id`, `id_order`, `id_product`, `quantity`, `price`) VALUES
-(1, 1, 6, 4, '1000000.00'),
-(2, 2, 7, 3, '1000000.00');
+(11, 11, 6, 2, '1000000.00');
 
 -- --------------------------------------------------------
 
@@ -154,7 +152,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('OZQnjsiKgAt3mypxKTih6Kng7A5DznPXGIT1ay3i', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoianZwTW9jMXRUS1lPM3Jtd2ZOak54dVRZcGx2dHN5aUcxdEsyeklGeiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MztzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO319', 1733941410);
+('YXH5i16GBdmYLmNgtWC7fbCqevtTXqQhfGSU0udi', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiYjFhTHhIQ211VEdzN1Z1QzdSRElPWVdVb0RRRDJWTlduMmJ5UTVnVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319fQ==', 1734011415);
 
 -- --------------------------------------------------------
 
@@ -281,13 +279,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `products`
