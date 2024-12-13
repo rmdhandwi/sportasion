@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { router } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import TemplateAdmin from "@/Layouts/TemplateAdmin.vue";
 import {
     useToast,
@@ -11,11 +11,15 @@ import {
     Column,
     IconField,
     InputIcon,
-    InputText,
+    Textarea,
     ConfirmDialog,
     Image,
     Tag,
     useConfirm,
+    Dialog,
+    FloatLabel,
+    Message,
+    InputText,
 } from "primevue";
 import { FilterMatchMode } from "@primevue/core/api";
 
@@ -34,8 +38,6 @@ onMounted(() => {
         index: index + 1,
         ...item,
     }));
-
-    ShowToast();
 });
 
 const formatRupiah = (angka) => {
@@ -81,14 +83,12 @@ const refrashLoading = ref(false);
 // Fungsi untuk merefresh halaman
 const refresh = () => {
     refrashLoading.value = true;
-    return new Promise((resolve) => {
-        router.visit(route("orders"), {
-            preserveScroll: true,
-            onSuccess: () => {
-                refrashLoading.value = false;
-                resolve(); // Resolusi promise setelah refresh berhasil
-            },
-        });
+    router.visit(route("orders"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            refrashLoading.value = false;
+            resolve(); // Resolusi promise setelah refresh berhasil
+        },
     });
 };
 
@@ -109,17 +109,15 @@ const acceptOrder = (data) => {
             label: "Terima",
             severity: "success",
         },
-        accept: () => {
-            console.log("Mengirim permintaan untuk menerima orderan...");
-            router.put(route("orderAccept", data.id), {
-                onSuccess: () => {
-                    console.log("Berhasil menerima orderan");
-                    refresh().then(() => {
+        accept: async () => {
+            await router.put(`Orders/${data.id}/accepted`, data.id, {
+                onSuccess: async () => {
+                    await refresh();
+                    setTimeout(() => {
                         ShowToast();
-                    });
+                    }, 500);
                 },
                 onError: () => {
-                    console.error("Gagal menerima orderan");
                     toast.add({
                         severity: "error",
                         summary: "notifikasi",
@@ -141,6 +139,33 @@ const acceptOrder = (data) => {
         },
     });
 };
+const formCancel = useForm({
+    id: "",
+    catatan: "",
+});
+const visible = ref(false);
+const cancelOrder = (data) => {
+    visible.value = true;
+    formCancel.reset();
+    formCancel.clearErrors();
+    formCancel.id = data.id;
+};
+
+const cancelSubmit = async () => {
+    await formCancel.put(route("cancelOrder", formCancel.id), {
+        onSuccess: async () => {
+            visible.value = false;
+            await refresh();
+            setTimeout(() => {
+                ShowToast();
+            }, 500);
+        },
+        onError: () => {
+            visible.value = true;
+            ShowToast();
+        },
+    });
+};
 </script>
 
 <template>
@@ -151,6 +176,48 @@ const acceptOrder = (data) => {
             <div class="flex justify-between items-center mb-4">
                 <h1 class="font-semibold text-xl">Daftar {{ props.title }}</h1>
             </div>
+
+            <Dialog
+                v-model:visible="visible"
+                modal
+                header="Tolak Pesanan"
+                :style="{ width: '25vw' }"
+                :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+            >
+                <span class="text-sm">Pesanan Ditolak karena?</span>
+                <form @submit.prevent="cancelSubmit">
+                    <div class="mb-4 mt-2">
+                        <FloatLabel variant="on">
+                            <Textarea
+                                id="over_label"
+                                v-model="formCancel.catatan"
+                                rows="5"
+                                cols="30"
+                                :invalid="!!formCancel.errors.catatan"
+                                style="resize: none"
+                            />
+                            <label for="on_label">Catatan</label>
+                        </FloatLabel>
+                        <Message
+                            v-if="formCancel.errors.catatan"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ formCancel.errors.catatan }}
+                        </Message>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <Button
+                            type="button"
+                            label="Cancel"
+                            severity="secondary"
+                            @click="visible = false"
+                        ></Button>
+                        <Button type="submit" label="Save"></Button>
+                    </div>
+                </form>
+            </Dialog>
 
             <!-- tabele -->
             <Card>
@@ -204,24 +271,24 @@ const acceptOrder = (data) => {
                         />
                         <Column header="Nama Produk">
                             <template #body="{ data }">
-                                {{ data.order_details[0].product.name }}
+                                {{ data.product.name }}
                             </template>
                         </Column>
                         <Column header="Harga Satuan">
                             <template #body="{ data }">
-                                {{ formatRupiah(data.order_details[0].price) }}
+                                {{ formatRupiah(data.product.price) }}
                             </template>
                         </Column>
                         <Column header="Quantity">
                             <template #body="{ data }">
-                                {{ data.order_details[0].quantity }}
+                                {{ data.quantity }}
                             </template>
                         </Column>
                         <Column header="Gambar Produk">
                             <template #body="{ data }">
                                 <Image
-                                    v-if="data.order_details[0].product.image"
-                                    :src="data.order_details[0].product.image"
+                                    v-if="data.product.image"
+                                    :src="data.product.image"
                                     alt="Image"
                                     width="150"
                                     class="border-1"
@@ -235,8 +302,13 @@ const acceptOrder = (data) => {
                                 {{ formatRupiah(data.total_price) }}
                             </template>
                         </Column>
-                        <Column frozen align-frozen="right" header="Status">
+                        <Column header="Status">
                             <template #body="{ data }">
+                                <Tag
+                                    severity="danger"
+                                    v-if="data.status == 3"
+                                    value="Pesanan Ditolak"
+                                />
                                 <Tag
                                     severity="info"
                                     v-if="data.status == 2"
@@ -252,6 +324,14 @@ const acceptOrder = (data) => {
                                     v-else-if="data.status == 0"
                                     value="Pesanan Telah diterima"
                                 />
+                            </template>
+                        </Column>
+                        <Column header="Catatan">
+                            <template #body="{ data }">
+                                <span v-if="data.status == 3">{{
+                                    data.catatan
+                                }}</span>
+                                <span v-else><i>Tidak ada catatan</i></span>
                             </template>
                         </Column>
                         <Column frozen align-frozen="right" header="Opsi">

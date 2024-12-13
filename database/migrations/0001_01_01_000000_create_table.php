@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone');
             $table->string('address')->nullable();
-            $table->enum('role', ['admin', 'owner', 'costumer']);
+            $table->int('role');
             $table->timestamps();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
             $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
@@ -33,16 +33,15 @@ return new class extends Migration
 
         // Categories Table
         Schema::create('categories', function (Blueprint $table) {
-            $table->id('id_category');
+            $table->id();
             $table->string('name', 100);
-            $table->text('description')->nullable();
             $table->timestamps();
         });
 
         // Products Table
         Schema::create('products', function (Blueprint $table) {
-            $table->id('id_product');
-            $table->foreignId('id_category')->constrained('categories', 'id_category')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('id_category')->constrained('categories', 'id')->onDelete('cascade');
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
@@ -53,31 +52,27 @@ return new class extends Migration
 
         // Orders Table
         Schema::create('orders', function (Blueprint $table) {
-            $table->id('id_order');
+            $table->id();
             $table->foreignId('id_user')->constrained('users', 'id')->onDelete('cascade');
+            $table->foreignId('id_product')->constrained('product', 'id')->onDelete('cascade');
+            $table->int('quantity');
             $table->dateTime('order_date');
-            $table->enum('status', ['pending', 'processed', 'shipped', 'delivered', 'cancelled']);
+            $table->int('status');
             $table->decimal('total_price', 10, 2);
+            $table->text('catatan')->nullable();
             $table->timestamps();
-        });
-
-        // Order Details Table
-        Schema::create('order_details', function (Blueprint $table) {
-            $table->id('id_order_detail');
-            $table->foreignId('id_order')->constrained('orders', 'id_order')->onDelete('cascade');
-            $table->foreignId('id_product')->constrained('products', 'id_product')->onDelete('cascade');
-            $table->integer('quantity');
-            $table->decimal('price', 10, 2);
         });
 
         // Transactions Table
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id('id_transaction');
-            $table->foreignId('id_order')->constrained('orders', 'id_order')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('id_order')->constrained('orders', 'id')->onDelete('cascade');
             $table->enum('payment_method', ['bank_transfer', 'e-wallet']);
-            $table->enum('payment_status', ['pending', 'paid', 'failed']);
             $table->decimal('amount', 10, 2);
+            $table->text('bukti_tf');
+            $table->int('status');
             $table->dateTime('payment_date')->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

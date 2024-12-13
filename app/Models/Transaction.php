@@ -20,12 +20,13 @@ class Transaction extends Model
         'bukti_tf',
         'status',
         'payment_date',
+        'catatan',
         'created_at',
         'updated_at'
     ];
 
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'id_order');
     }
 }

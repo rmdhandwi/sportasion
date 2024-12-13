@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('Dashboard', [Dashboard::class, 'dashboardPage'])->name('dashboard');
 
     Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumerPage');
@@ -41,10 +41,14 @@ Route::middleware('auth')->group(function () {
     Route::post('Products', [Products::class, 'addProduct'])->name('addProduct');
     Route::post('Products/{id}/edit', [Products::class, 'editProduct'])->name('editProduct');
     Route::delete('Products/{id}/delete', [Products::class, 'deleteProduct'])->name('deleteProduct');
-    
-    Route::get('Orders',[OrderController::class, 'orderPage'])->name('orders');
-    Route::put('Orders/{id}/accapted',[OrderController::class, 'acceptOrder'])->name('orderAccept');
 
+    Route::get('Orders', [OrderController::class, 'orderPage'])->name('orders');
+    Route::put('Orders/{id}/accepted', [OrderController::class, 'acceptOrder'])->name('orderAccept');
+    Route::put('Orders/{id}/cancel', [OrderController::class, 'CancelOrder'])->name('cancelOrder');
+
+    Route::get('Transaction', [TransactionController::class, 'transactionPage'])->name('transactions');
+    Route::put('Transaction/{id}/accepted', [TransactionController::class, 'accaptTransaction'])->name('accaptTransaction');
+    Route::put('Transaction/{id}/cancel', [TransactionController::class, 'cancelTransaction'])->name('cancelTransaction');
 });
 
 require __DIR__ . '/auth.php';

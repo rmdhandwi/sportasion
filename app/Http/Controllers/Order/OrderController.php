@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function addOrder(Request $req)
     {
         $produk = products::find($req->id_product);
-        $order = Order::where('id_product', $req->id_product)->where('status',2)->get();
+        $order = Order::where('id_product', $req->id_product)->where('status', 2)->get();
 
         if (!$order->isEmpty()) {
 
@@ -137,7 +137,7 @@ class OrderController extends Controller
 
     public function orderPage()
     {
-        $order = Order::with('orderDetails.product', 'user')->get();
+        $order = Order::with('product', 'user')->get();
 
         return Inertia::render('Admin/Orders', [
             'title' => 'Orders',
@@ -155,15 +155,44 @@ class OrderController extends Controller
                 'notif_status' => 'error',
                 'message' => 'Orderan tidak ditemukan',
             ]);
+        } else {
+            // Update status order
+            $order->status = 0; // Misalnya, 0 berarti diterima
+            $order->save();
+
+            return redirect()->back()->with([
+                'notif_status' => 'success',
+                'message' => 'Orderan dari ' . $order->user->name . ' berhasil diterima',
+            ]);
         }
+    }
 
-        // Update status order
-        $order->status = 0; // Misalnya, 0 berarti diterima
-        $order->save();
-
-        return redirect()->route('orders')->with([
-            'notif_status' => 'success',
-            'message' => 'Orderan dari ' . $order->user->name . ' berhasil diterima',
+    public function CancelOrder(Request $request, $id)
+    {
+        $request->validate([
+            'catatan' => 'required'
+        ],[
+            'catatan.required' => 'Catatan tidak boleh kosong'
         ]);
+
+        // Temukan order berdasarkan id
+        $order = Order::with('user')->find($id); // Menggunakan relasi untuk mengambil user
+
+        if (!$order) {
+            return redirect()->back()->with([
+                'notif_status' => 'error',
+                'message' => 'Orderan tidak ditemukan',
+            ]);
+        } else {
+            // Update status order
+            $order->status = 3;
+            $order->catatan = $request->catatan; // Misalnya, 0 berarti diterima
+            $order->save();
+
+            return redirect()->back()->with([
+                'notif_status' => 'success',
+                'message' => 'Orderan dari ' . $order->user->name . ' dicancel',
+            ]);
+        }
     }
 }

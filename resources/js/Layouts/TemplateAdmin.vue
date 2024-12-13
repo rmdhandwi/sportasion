@@ -93,6 +93,20 @@ const Logout = () => {
                     <i class="pi pi-file-edit"></i>
                     <span>Orders</span>
                 </Button>
+                <Button
+                    as="a"
+                    :href="route('transactions')"
+                    unstyled
+                    :class="[
+                        'flex items-center gap-4 w-full text-left px-4 py-3 rounded-md',
+                        props.title === 'Transaction'
+                            ? 'bg-gray-300 text-gray-800'
+                            : 'hover:bg-gray-200 text-gray-800 transition-all',
+                    ]"
+                >
+                    <i class="pi pi-chart-bar"></i>
+                    <span>Orders</span>
+                </Button>
                 <hr />
                 <Button
                     unstyled
@@ -169,6 +183,20 @@ const Logout = () => {
                     <i class="pi pi-file-edit"></i>
                     <span>Orders</span>
                 </Button>
+                <Button
+                    as="a"
+                    :href="route('transactions')"
+                    unstyled
+                    :class="[
+                        'flex items-center gap-4 w-full text-left px-4 py-3 rounded-md',
+                        props.title === 'Transaction'
+                            ? 'bg-gray-600'
+                            : 'hover:bg-gray-600 transition-all',
+                    ]"
+                >
+                    <i class="pi pi-chart-bar"></i>
+                    <span>Transaction</span>
+                </Button>
                 <hr />
                 <Button
                     unstyled
@@ -218,7 +246,24 @@ aside,
 }
 
 main {
-    max-width: 85vw; /* Membatasi lebar maksimum ke lebar viewport */
-    box-sizing: border-box; /* Memastikan padding tidak menambah lebar total */
+    max-width: 85vw; /* Maximum width of 85% of the viewport width */
+    box-sizing: border-box; /* Ensures padding does not add to total width */
+    padding: 1rem; /* Add some padding for better spacing */
+    margin: 0 auto; /* Center the main element */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    main {
+        max-width: 95vw; /* Increase max width on smaller screens */
+        padding: 0.5rem; /* Reduce padding on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        max-width: 100vw; /* Full width on very small screens */
+        padding: 0.25rem; /* Further reduce padding */
+    }
 }
 </style>

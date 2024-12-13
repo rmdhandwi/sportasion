@@ -28,8 +28,5 @@ class products extends Model
         return $this->belongsTo(categories::class,'id_category');
     }
 
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetails::class, 'id_product');
-    }
+
 }

@@ -20,6 +20,7 @@ class Order extends Model
         'order_date',
         'status',
         'total_price',
+        'catatan',
         'created_at',
         'updated_at'
     ];
