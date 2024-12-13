@@ -15,6 +15,8 @@ class Order extends Model
     protected $fillable = [
         'id',
         'id_user',
+        'id_product',
+        'quantity',
         'order_date',
         'status',
         'total_price',
@@ -27,13 +29,13 @@ class Order extends Model
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
+    public function product()
+    {
+        return $this->belongsTo(products::class, 'id_product', 'id');
+    }
+
     public function transaksi()
     {
         return $this->hasMany(Transaction::class, 'id_order', 'id');
-    }
-
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetails::class, 'id_order', 'id');
     }
 }

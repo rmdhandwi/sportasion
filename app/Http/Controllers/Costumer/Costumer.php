@@ -15,8 +15,8 @@ class Costumer extends Controller
 {
     public function costumerPage()
     {
-        $dataCart = Order::where('id_user', auth()->guard()->user()->id)->where('status','!=',0)->with('orderDetails.product')->get();
-        $dataTransaksi = Order::where('id_user', auth()->guard()->user()->id)->where('status', 0)->with('orderDetails.product')->with('transaksi')->get();
+        $dataCart = Order::where('id_user', auth()->guard()->user()->id)->where('status','!=',0)->with('product')->get();
+        $dataTransaksi = Order::where('id_user', auth()->guard()->user()->id)->where('status', 0)->with('product')->with('transaksi')->get();
         $dataKategori = categories::select('id','name')->get();
         $dataProduk = products::with('categories')->get();
 
@@ -30,7 +30,7 @@ class Costumer extends Controller
 
     public function kategoriPage(Request $req)
     {
-        $dataCart = Order::where('id_user', auth()->guard()->user()->id)->with('orderDetails.product')->get();
+        $dataCart = Order::where('id_user', auth()->guard()->user()->id)->with('product')->get();
         
         $dataKategori = categories::select('id', 'name')->get();
         $dataProduk = products::where('id_category',$req->id)->with('categories')->get();

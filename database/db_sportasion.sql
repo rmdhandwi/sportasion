@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3000
--- Generation Time: Dec 12, 2024 at 05:06 PM
+-- Generation Time: Dec 13, 2024 at 11:39 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.26
 
@@ -60,7 +60,8 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_table', 1);
+(1, '0001_01_01_000000_create_table', 1),
+(3, '2024_12_13_104805_update_order_table', 2);
 
 -- --------------------------------------------------------
 
@@ -71,6 +72,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 CREATE TABLE `orders` (
   `id` bigint UNSIGNED NOT NULL,
   `id_user` bigint UNSIGNED NOT NULL,
+  `id_product` bigint UNSIGNED NOT NULL,
+  `quantity` int NOT NULL,
   `order_date` datetime NOT NULL,
   `status` int NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
@@ -82,31 +85,8 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `id_user`, `order_date`, `status`, `total_price`, `created_at`, `updated_at`) VALUES
-(11, 3, '2024-12-12 22:49:48', 0, '2000000.00', '2024-12-12 14:49:48', NULL),
-(12, 3, '2024-12-13 01:20:57', 0, '1000000.00', '2024-12-12 17:20:57', NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `order_details`
---
-
-CREATE TABLE `order_details` (
-  `id` bigint UNSIGNED NOT NULL,
-  `id_order` bigint UNSIGNED NOT NULL,
-  `id_product` bigint UNSIGNED NOT NULL,
-  `quantity` int NOT NULL,
-  `price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `order_details`
---
-
-INSERT INTO `order_details` (`id`, `id_order`, `id_product`, `quantity`, `price`) VALUES
-(11, 11, 6, 2, '1000000.00'),
-(12, 12, 7, 1, '1000000.00');
+INSERT INTO `orders` (`id`, `id_user`, `id_product`, `quantity`, `order_date`, `status`, `total_price`, `created_at`, `updated_at`) VALUES
+(17, 3, 6, 3, '2024-12-13 20:08:43', 0, '3000000.00', '2024-12-13 12:08:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -154,7 +134,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('zjyAI9coXPu2mTJBi3VxTcEfePlixt5VTBGXdXjS', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZHNqVG1MRXhBSGJONjdmbW54dnpYQ0F4a0dtVWwwT2xWWjNOSE9yMyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MztzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO319', 1734022574);
+('e3SBoWPJI0fFuKBTTWCPlyCGyc6DovfplsrNjZdE', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiRTF4aUx4SkkxNUhwN051MExJQ2dEVXRTOEZ0blpGNE82U1doUzBYOSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjY6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9Ib21lIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mzt9', 1734089913);
 
 -- --------------------------------------------------------
 
@@ -179,7 +159,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `id_order`, `payment_method`, `amount`, `bukti_tf`, `status`, `payment_date`, `created_at`, `updated_at`) VALUES
-(1, 11, 'bank_transfer', '2000000.00', '/storage/uploads/bukti_tf/GFxzC1oDf3-2024-12-13.jpeg', 2, '2024-12-13 01:17:43', '2024-12-12 17:17:43', NULL);
+(2, 17, 'bank_transfer', '3000000.00', '/storage/uploads/bukti_tf/EzC7LElXtF-2024-12-13.jpeg', 2, '2024-12-13 20:31:00', '2024-12-13 12:31:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -206,7 +186,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `username`, `password`, `phone`, `address`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'admin', '$2y$10$qRp/1lxCC3YVWPT0BDiYZe5yftxxGb06w2t616Fumj1P0lxtU24tK', '2483734283723', 'shjdipsjdsj', 1, NULL, NULL),
 (2, 'owner', 'owner', '$2y$10$SLVNnA2lljO8IRzjnI6l3e3oPG8jeFdrHX0ISjN9iK69IGcFVQ0c6', '7342803732', 'dsdsdshdiuj', 2, NULL, NULL),
-(3, 'Costumer1', 'costumer1', '$2y$10$vU1pfMpWwUMp.NozRStXhOr75o7mSgvrxvGrtbKcdUw19pEjmfo8.', '454534334545', 'Laboriosam veniam', 3, '2024-12-10 08:31:31', '2024-12-09 23:31:31'),
+(3, 'Costumer1', 'costumer1', '$2y$12$PTs9KnQqXfv89adWZTM.D.ZXHvuLgM70KtR3L.cYNvX7b4IOoUUky', '454534334545', 'Laboriosam veniam', 3, '2024-12-10 08:31:31', '2024-12-09 23:31:31'),
 (4, 'Costumer 2', 'costumer2', '$2y$10$hpHihWa8xg8mBpC05RBsnupskdtT4bPwH2tJ0FATWwgGsWQJXsC4y', '43534545345435', 'Atque qui labore ear', 3, '2024-12-10 08:33:57', NULL);
 
 --
@@ -230,15 +210,8 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `orders_id_user_foreign` (`id_user`);
-
---
--- Indexes for table `order_details`
---
-ALTER TABLE `order_details`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `order_details_id_order_foreign` (`id_order`),
-  ADD KEY `order_details_id_product_foreign` (`id_product`);
+  ADD KEY `orders_id_user_foreign` (`id_user`),
+  ADD KEY `orders_id_product_foreign` (`id_product`);
 
 --
 -- Indexes for table `products`
@@ -283,19 +256,13 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `order_details`
---
-ALTER TABLE `order_details`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -307,7 +274,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -324,13 +291,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `order_details`
---
-ALTER TABLE `order_details`
-  ADD CONSTRAINT `order_details_id_order_foreign` FOREIGN KEY (`id_order`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_details_id_product_foreign` FOREIGN KEY (`id_product`) REFERENCES `products` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `products`

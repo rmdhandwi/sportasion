@@ -16,38 +16,37 @@ class OrderController extends Controller
     public function addOrder(Request $req)
     {
         $produk = products::find($req->id_product);
-        $userCartOrder = OrderDetails::where('id_product', $req->id_product)->get();
+        $order = Order::where('id_product', $req->id_product)->where('status',2)->get();
 
-        if (!$userCartOrder->isEmpty()) {
-            $order = Order::find($userCartOrder[0]->id_order);
+        if (!$order->isEmpty()) {
 
-            $userCartOrder[0]->quantity += $req->quantity;
-            $orderDetails = $userCartOrder[0]->save();
+            $order[0]->quantity += $req->quantity;
+            $order[0]->total_price = $produk->price * $order[0]->quantity;
+            $insertOrder = $order[0]->save();
 
-            $order->total_price = $produk->price * $userCartOrder[0]->quantity;
-            $insertOrder = $order->save();
+            $notif = [
+                'notif_status' => 'success',
+                'message' => 'Berhasil update keranjang!',
+            ];
         } else {
             $insertOrder = Order::create([
                 'id_user' => auth()->guard()->user()->id,
+                'id_product' => $req->id_product,
+                'quantity' => $req->quantity,
                 'order_date' => Carbon::now('Asia/Jayapura'),
                 'status' => 2,
                 'total_price' => $produk->price * $req->quantity,
                 'created_at' => Carbon::now('Asia/Jayapura')
             ]);
 
-            $orderDetails = OrderDetails::create([
-                'id_order' => $insertOrder->id,
-                'id_product' => $req->id_product,
-                'quantity' => $req->quantity,
-                'price' => $produk->price,
-            ]);
-        }
-
-        if ($insertOrder && $orderDetails) {
-            return redirect()->back()->with([
+            $notif = [
                 'notif_status' => 'success',
                 'message' => 'Berhasil menambahkan keranjang!',
-            ]);
+            ];
+        }
+
+        if ($insertOrder) {
+            return redirect()->back()->with($notif);
         } else {
             return redirect()->back()->with([
                 'notif_status' => 'error',
@@ -58,18 +57,12 @@ class OrderController extends Controller
 
     public function updateOrder(Request $req)
     {
-        $userCartOrder = OrderDetails::where('id_order', $req->id_cart)->get();
-
-
         $order = Order::find($req->id_cart);
-
-        $userCartOrder[0]->quantity = $req->quantity;
-        $orderDetails = $userCartOrder[0]->save();
-
-        $order->total_price = $userCartOrder[0]->price * $userCartOrder[0]->quantity;
+        $order->quantity = $req->quantity;
+        $order->total_price = $order->price * $order->quantity;
         $insertOrder = $order->save();
 
-        if ($insertOrder && $orderDetails) {
+        if ($insertOrder) {
             return redirect()->back()->with([
                 'notif_status' => 'success',
                 'message' => 'Berhasil update keranjang',
@@ -84,10 +77,9 @@ class OrderController extends Controller
 
     public function hapusOrder(Request $req)
     {
-        $hapusOrderDetails = OrderDetails::where('id_order', $req->id_cart)->delete();
         $hapusOrder = Order::find($req->id_cart)->delete();
 
-        if ($hapusOrderDetails && $hapusOrder) {
+        if ($hapusOrder) {
             return redirect()->back()->with([
                 'notif_status' => 'success',
                 'message' => 'Berhasil menghapus produk dari keranjang!',
@@ -102,19 +94,15 @@ class OrderController extends Controller
 
     public function pesanOrder(Request $req)
     {
-        $userCartOrder = OrderDetails::where('id_order', $req->id_cart)->get();
-
-
         $order = Order::find($req->id_cart);
 
-        $userCartOrder[0]->quantity = $req->quantity;
-        $orderDetails = $userCartOrder[0]->save();
+        $order->quantity = $req->quantity;
 
         $order->status = 1;
-        $order->total_price = $userCartOrder[0]->price * $userCartOrder[0]->quantity;
+        $order->total_price = $order->price * $order->quantity;
         $insertOrder = $order->save();
 
-        if ($insertOrder && $orderDetails) {
+        if ($insertOrder) {
             return redirect()->back()->with([
                 'notif_status' => 'success',
                 'message' => 'Berhasil memesan produk!',

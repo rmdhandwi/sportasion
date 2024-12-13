@@ -22,7 +22,7 @@ const props = defineProps({
 
 onMounted(() => {
     dataCart.forEach((produk) => {
-        jmlhPesan.value[produk.id] = produk.order_details[0]["quantity"];
+        jmlhPesan.value[produk.id] = produk?.quantity;
     });
 
     ShowToast();
@@ -295,7 +295,7 @@ const submitTransaksi = (id) => {
 
 const dialogHide = () =>
     dataCart.forEach((produk) => {
-        jmlhPesan.value[produk.id] = produk.order_details[0]["quantity"];
+        jmlhPesan.value[produk.id] = produk.quantity;
     });
 
 const uploadBuktiTF = (event) => {
@@ -345,13 +345,14 @@ const logout = () => {
             @submit.prevent
             class="flex gap-4 w-full my-8"
             autocomplete="off"
-            v-for="cart in dataCart"
+            v-for="(cart,index) in dataCart"
             :key="cart.id"
         >
+            <span class="text-xl">{{ index+1 }}</span>
             <div class="flex flex-col w-[75%] gap-2">
                 <div class="overflow-hidden rounded-lg">
                     <img
-                        :src="cart.order_details[0]['product']['image']"
+                        :src="cart.product.image"
                         class="size-full"
                     />
                 </div>
@@ -370,7 +371,7 @@ const logout = () => {
                             class="w-full"
                             inputId="custom"
                             :modelValue="
-                                cart.order_details[0]['product']['name']
+                                cart.product.name
                             "
                         />
                         <label for="custom">Nama Produk</label>
@@ -408,7 +409,7 @@ const logout = () => {
                         <InputNumber
                             disabled
                             :modelValue="
-                                cart.order_details[0]['product']['price'] *
+                                cart.product.price *
                                 jmlhPesan[cart.id]
                             "
                             inputId="on_label"
@@ -425,13 +426,13 @@ const logout = () => {
                         label="Update"
                         :disabled="
                             jmlhPesan[cart.id] ===
-                            cart.order_details[0]['quantity']
+                            cart.quantity
                         "
                         severity="info"
                         @click="
                             updateCart(
                                 cart.id,
-                                cart.order_details[0]['product']['name']
+                                cart.product['name']
                             )
                         "
                     />
@@ -442,7 +443,7 @@ const logout = () => {
                         @click="
                             pesanCart(
                                 cart.id,
-                                cart.order_details[0]['product']['name']
+                                cart.product['name']
                             )
                         "
                     />
@@ -453,7 +454,7 @@ const logout = () => {
                         @click="
                             hapusCart(
                                 cart.id,
-                                cart.order_details[0]['product']['name']
+                                cart.product['name']
                             )
                         "
                         outlined
@@ -465,7 +466,7 @@ const logout = () => {
                         @click="
                             batalPesan(
                                 cart.id,
-                                cart.order_details[0]['product']['name']
+                                cart.product['name']
                             )
                         "
                     />
@@ -485,13 +486,14 @@ const logout = () => {
             @submit.prevent
             class="flex gap-4 my-4"
             autocomplete="off"
-            v-for="transaksi in dataTransaksi"
+            v-for="(transaksi, index) in dataTransaksi"
             :key="transaksi.id"
         >
+            <span class="text-xl">{{ index+1 }}</span>
             <div class="flex flex-col gap-2 w-[90%]">
                 <div class="overflow-hidden rounded-lg">
                     <img
-                        :src="transaksi.order_details[0]['product']['image']"
+                        :src="transaksi.product.image"
                     />
                 </div>
                 <Tag
@@ -509,7 +511,7 @@ const logout = () => {
                             class="w-full"
                             inputId="custom"
                             :modelValue="
-                                transaksi.order_details[0]['product']['name']
+                                transaksi.product.name
                             "
                         />
                         <label for="custom">Nama Produk</label>
@@ -530,7 +532,7 @@ const logout = () => {
                 <div class="flex flex-col w-[12rem]">
                     <FloatLabel variant="on">
                         <InputNumber
-                            v-model="transaksi.order_details[0]['quantity']"
+                            v-model="transaksi.quantity"
                             disabled
                             inputId="minmax-buttons"
                             mode="decimal"
@@ -561,7 +563,7 @@ const logout = () => {
                         <Select
                             fluid
                             class="w-full"
-                            :disabled="transaksi.transaksi.length < 0"
+                            :disabled="transaksi.transaksi.length > 0"
                             v-model="formTransaksi.metode_bayar"
                             :options="metodeBayar"
                             optionLabel="metode"
@@ -589,7 +591,7 @@ const logout = () => {
                     />
                 </div>
                 <Tag
-                    v-if="transaksi.transaksi[0]?.status === 2"
+                    v-if="transaksi.transaksi[0]?.status == 2"
                     value="Pembayaran Berhasil"
                     severity="success"
                 />

@@ -45,8 +45,6 @@ const formCart = useForm({
 
 const jmlhPesan = ref({});
 
-const showDialog = ref(false);
-
 // Fungsi untuk menampilkan notifikasi jika ada pesan flash
 const toast = useToast();
 const ShowToast = () => {
