@@ -79,6 +79,20 @@ const Logout = () => {
                     <i class="pi pi-shop"></i>
                     <span>Products</span>
                 </Button>
+                <Button
+                    as="a"
+                    :href="route('orders')"
+                    unstyled
+                    :class="[
+                        'flex items-center gap-4 w-full text-left px-4 py-3 rounded-md',
+                        props.title === 'Orders'
+                            ? 'bg-gray-300 text-gray-800'
+                            : 'hover:bg-gray-200 text-gray-800 transition-all',
+                    ]"
+                >
+                    <i class="pi pi-file-edit"></i>
+                    <span>Orders</span>
+                </Button>
                 <hr />
                 <Button
                     unstyled
@@ -141,6 +155,20 @@ const Logout = () => {
                     <i class="pi pi-shop"></i>
                     <span>Products</span>
                 </Button>
+                <Button
+                    as="a"
+                    :href="route('orders')"
+                    unstyled
+                    :class="[
+                        'flex items-center gap-4 w-full text-left px-4 py-3 rounded-md',
+                        props.title === 'Orders'
+                            ? 'bg-gray-600'
+                            : 'hover:bg-gray-600 transition-all',
+                    ]"
+                >
+                    <i class="pi pi-file-edit"></i>
+                    <span>Orders</span>
+                </Button>
                 <hr />
                 <Button
                     unstyled
@@ -173,10 +201,10 @@ const Logout = () => {
             </header>
 
             <!-- Scrollable Content -->
-            <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
-                <slot name="content">
-                    
-                </slot>
+            <main
+                class="flex-1 overflow-y-auto overflow-x-hidden p-6 bg-gray-100 w-full"
+            >
+                <slot name="content"> </slot>
             </main>
         </div>
     </div>
@@ -187,5 +215,10 @@ const Logout = () => {
 aside,
 .p-sidebar {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    max-width: 85vw; /* Membatasi lebar maksimum ke lebar viewport */
+    box-sizing: border-box; /* Memastikan padding tidak menambah lebar total */
 }
 </style>

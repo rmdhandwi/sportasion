@@ -39,7 +39,7 @@ class HandleInertiaRequests extends Middleware
                 'notif'     => fn()  => $request->session()->get('notif_status'),
                 'message'   => fn()  => $request->session()->get('message'),
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],

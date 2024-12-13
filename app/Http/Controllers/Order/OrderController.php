@@ -6,37 +6,35 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\products;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
-    //
     public function addOrder(Request $req)
     {
         $produk = products::find($req->id_product);
-        $userCartOrder = OrderDetails::where('id_product',$req->id_product)->get();
-        
-        if(!$userCartOrder->isEmpty())
-        {
+        $userCartOrder = OrderDetails::where('id_product', $req->id_product)->get();
+
+        if (!$userCartOrder->isEmpty()) {
             $order = Order::find($userCartOrder[0]->id_order);
-            
+
             $userCartOrder[0]->quantity += $req->quantity;
             $orderDetails = $userCartOrder[0]->save();
 
             $order->total_price = $produk->price * $userCartOrder[0]->quantity;
             $insertOrder = $order->save();
-        }
-        else
-        {
+        } else {
             $insertOrder = Order::create([
-            'id_user' => auth()->guard()->user()->id,
-            'order_date' => Carbon::now('Asia/Jayapura'),
-            'status' => 2,
-            'total_price' => $produk->price * $req->quantity,
-            'created_at' => Carbon::now('Asia/Jayapura')
+                'id_user' => auth()->guard()->user()->id,
+                'order_date' => Carbon::now('Asia/Jayapura'),
+                'status' => 2,
+                'total_price' => $produk->price * $req->quantity,
+                'created_at' => Carbon::now('Asia/Jayapura')
             ]);
-    
+
             $orderDetails = OrderDetails::create([
                 'id_order' => $insertOrder->id,
                 'id_product' => $req->id_product,
@@ -45,8 +43,7 @@ class OrderController extends Controller
             ]);
         }
 
-        if($insertOrder && $orderDetails)
-        {
+        if ($insertOrder && $orderDetails) {
             return redirect()->back()->with([
                 'notif_status' => 'success',
                 'message' => 'Berhasil menambahkan keranjang!',
@@ -61,19 +58,18 @@ class OrderController extends Controller
 
     public function updateOrder(Request $req)
     {
-        $userCartOrder = OrderDetails::where('id_order',$req->id_cart)->get();
-        
-        
+        $userCartOrder = OrderDetails::where('id_order', $req->id_cart)->get();
+
+
         $order = Order::find($req->id_cart);
-        
+
         $userCartOrder[0]->quantity = $req->quantity;
         $orderDetails = $userCartOrder[0]->save();
 
         $order->total_price = $userCartOrder[0]->price * $userCartOrder[0]->quantity;
         $insertOrder = $order->save();
 
-        if($insertOrder && $orderDetails)
-        {
+        if ($insertOrder && $orderDetails) {
             return redirect()->back()->with([
                 'notif_status' => 'success',
                 'message' => 'Berhasil update keranjang',
@@ -107,7 +103,7 @@ class OrderController extends Controller
     public function pesanOrder(Request $req)
     {
         $userCartOrder = OrderDetails::where('id_order', $req->id_cart)->get();
-        
+
 
         $order = Order::find($req->id_cart);
 
@@ -149,5 +145,37 @@ class OrderController extends Controller
                 'message' => 'Pesanan Produk Gagal Dibatalkan!',
             ]);
         }
+    }
+
+    public function orderPage()
+    {
+        $order = Order::with('orderDetails.product', 'user')->get();
+
+        return Inertia::render('Admin/Orders', [
+            'title' => 'Orders',
+            'orders' => $order,
+        ]);
+    }
+
+    public function acceptOrder($id)
+    {
+        // Temukan order berdasarkan id
+        $order = Order::with('user')->find($id); // Menggunakan relasi untuk mengambil user
+
+        if (!$order) {
+            return redirect()->back()->with([
+                'notif_status' => 'error',
+                'message' => 'Orderan tidak ditemukan',
+            ]);
+        }
+
+        // Update status order
+        $order->status = 0; // Misalnya, 0 berarti diterima
+        $order->save();
+
+        return redirect()->route('orders')->with([
+            'notif_status' => 'success',
+            'message' => 'Orderan dari ' . $order->user->name . ' berhasil diterima',
+        ]);
     }
 }

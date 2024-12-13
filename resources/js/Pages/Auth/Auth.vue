@@ -84,12 +84,8 @@ const formRegister = useForm({
 });
 
 // Fungsi untuk menangani pengiriman form login
-const onSubmit = async () => {
-    await formLogin.post(route("login"), {
-        onSuccess: async () => {
-            await refresh(); // Tunggu hingga refresh selesai
-            ShowToast(); // Tampilkan toast setelah refresh
-        },
+const onSubmit = () => {
+    formLogin.post(route("loginsubmit"), {
         onError: () => {
             ShowToast(); // Tampilkan toast jika ada error
         },

@@ -21,7 +21,7 @@ class Authen extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
+        $loginForm = $request->validate([
             'username' => 'required',
             'password'    => 'required',
         ], [
@@ -32,33 +32,28 @@ class Authen extends Controller
         // Cek apakah pengguna ada
         $user = User::where('username', $request->username)->first();
 
-        // Verifikasi kata sandi
-        if ($user && Hash::check($request->password, $user->password)) {
-            $user->save();
+        if (Auth::attempt($loginForm)) {
 
-            // Login pengguna dan regenerasi session
-            Auth::login($user);
             $request->session()->regenerate();
-            $username = auth()->guard()->user();
 
-            if ($user->role == 1 || $user->role == 2) {
+            if ($user->role === 1 || $user->role === 2) {
                 return redirect()->route('dashboard')->with([
                     'notif_status' => 'success',
-                    'message'      => 'Selamat Datang.' . $username->username,
+                    'message'      => 'Selamat Datang.' . $request->username,
                 ]);
             } else {
                 return redirect()->route('costumerPage')->with([
                     'notif_status' => 'success',
-                    'message'      => 'Selamat Datang.' . $username->username,
+                    'message'      => 'Selamat Datang.' . $request->username,
                 ]);
             }
+        } else {
+            // Jika login gagal
+            return redirect()->back()->with([
+                'notif_status' => 'error',
+                'message'      => 'Username atau Password salah.',
+            ]);
         }
-
-        // Jika login gagal
-        return redirect()->back()->with([
-            'notif_status' => 'error',
-            'message'      => 'Username atau Password salah.',
-        ]);
     }
 
 
@@ -124,7 +119,6 @@ class Authen extends Controller
         return redirect()->route('login')->with([
             'notif_status' => 'success',
             'message'      => 'Anda telah berhasil logout.',
-            'notif_show'   => true, 
         ]);
     }
 }

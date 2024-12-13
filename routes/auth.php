@@ -12,7 +12,7 @@ Route::middleware('guest')->group(function () {
         ->name('register');
 
     Route::post('login', [Authen::class, 'login'])
-        ->name('login');
+        ->name('loginsubmit');
 });
 
 Route::middleware('auth')->group(function () {

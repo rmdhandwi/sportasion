@@ -24,16 +24,16 @@ class Order extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
     public function transaksi()
     {
-        return $this->hasMany(Transaction::class,'id_order','id');
+        return $this->hasMany(Transaction::class, 'id_order', 'id');
     }
 
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetails::class,'id_order','id');
+        return $this->hasMany(OrderDetails::class, 'id_order', 'id');
     }
 }

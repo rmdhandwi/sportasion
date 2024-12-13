@@ -18,6 +18,7 @@ Route::get('/', function () {
 
 
 Route::middleware('auth')->group(function () {
+    
     Route::get('Dashboard', [Dashboard::class, 'dashboardPage'])->name('dashboard');
 
     Route::get('Home', [Costumer::class, 'costumerPage'])->name('costumerPage');
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::post('Products', [Products::class, 'addProduct'])->name('addProduct');
     Route::post('Products/{id}/edit', [Products::class, 'editProduct'])->name('editProduct');
     Route::delete('Products/{id}/delete', [Products::class, 'deleteProduct'])->name('deleteProduct');
+    
+    Route::get('Orders',[OrderController::class, 'orderPage'])->name('orders');
+    Route::put('Orders/{id}/accapted',[OrderController::class, 'acceptOrder'])->name('orderAccept');
+
 });
 
 require __DIR__ . '/auth.php';

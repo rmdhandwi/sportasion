@@ -205,8 +205,8 @@ const deleteData = (data) => {
         },
         reject: () => {
             toast.add({
-                severity: "error",
-                summary: "Batal",
+                severity: "info",
+                summary: "Dibatalkan",
                 detail: "Batal menghapus data ",
                 life: 3000,
                 group: "tc",
