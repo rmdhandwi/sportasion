@@ -99,7 +99,7 @@ class OrderController extends Controller
         $order->quantity = $req->quantity;
 
         $order->status = 1;
-        $order->total_price = $order->price * $order->quantity;
+        $order->total_price = $order->total_price * $order->quantity;
         $insertOrder = $order->save();
 
         if ($insertOrder) {
@@ -154,7 +154,7 @@ class OrderController extends Controller
             return redirect()->back()->with([
                 'notif_status' => 'error',
                 'message' => 'Orderan tidak ditemukan',
-            ]);
+            ]); 
         } else {
             // Update status order
             $order->status = 0; // Misalnya, 0 berarti diterima

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Dec 13, 2024 at 04:57 PM
+-- Host: localhost:3000
+-- Generation Time: Dec 13, 2024 at 06:28 PM
 -- Server version: 8.0.30
--- PHP Version: 8.3.13
+-- PHP Version: 8.2.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -87,9 +87,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `id_user`, `id_product`, `quantity`, `order_date`, `status`, `total_price`, `catatan`, `created_at`, `updated_at`) VALUES
-(17, 3, 6, 3, '2024-12-13 20:08:43', 3, 3000000.00, 'ditolak 1', '2024-12-13 12:08:43', NULL),
-(20, 3, 6, 4, '2024-12-13 21:08:00', 0, 4000000.00, '', '2024-12-13 12:08:00', NULL),
-(21, 3, 7, 4, '2024-12-13 21:10:06', 0, 4000000.00, '', '2024-12-13 12:10:06', NULL);
+(22, 3, 7, 1, '2024-12-14 03:05:56', 0, '1000000.00', NULL, '2024-12-13 19:05:56', NULL),
+(23, 3, 7, 3, '2024-12-14 03:23:03', 0, '3000000.00', NULL, '2024-12-13 19:23:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -114,9 +113,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `id_category`, `name`, `description`, `price`, `stock`, `image`, `created_at`, `updated_at`) VALUES
-(6, 3, 'Sepatu Nike', NULL, 1000000.00, 44, '/storage/uploads/product/4cPKtAkxqD-2024-12-11.jpg', '2024-12-11 11:29:03', '2024-12-13 11:21:46'),
-(7, 4, 'Sepatu Nike 1', NULL, 1000000.00, 25, '/storage/uploads/product/f4qEbjrUAp-2024-12-11.jpg', '2024-12-11 11:29:04', '2024-12-11 09:29:27'),
-(8, 3, 'Yoshi Lindsey', NULL, 12222.00, 121, NULL, '2024-12-13 13:22:05', NULL);
+(6, 3, 'Sepatu Nike', NULL, '1000000.00', 44, '/storage/uploads/product/4cPKtAkxqD-2024-12-11.jpg', '2024-12-11 11:29:03', '2024-12-13 11:21:46'),
+(7, 4, 'Sepatu Nike 1', NULL, '1000000.00', 25, '/storage/uploads/product/f4qEbjrUAp-2024-12-11.jpg', '2024-12-11 11:29:04', '2024-12-11 09:29:27'),
+(8, 3, 'Yoshi Lindsey', NULL, '12222.00', 121, NULL, '2024-12-13 13:22:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -138,10 +137,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('4rLh1yeNh17e7OUMJ27l0pJMaNTEXCASIIy9dHic', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiV0thbktyVVRId2MxZmpwUEM5YUhVZVlmcGZZRUF3RXpGaEVmMnhZSCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1734097047),
-('gk4j6dQdIFEUaajb56pIGE6GZUD6eyDFNsNnpbDB', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiejdtNjVKckw3R1JWWW05d1ZVQk9JZExwN29NNUZ6UlRENlppVUl6ZyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1734097050),
-('HInI2SLUAyifdYc6I5SawMiAvcbQWzBI0tLE7t2g', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiNDVReVI2b2c2TUxub21idTZzcFRPMEpFVHVDUnhockNxVkxUcjVoQyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozMzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL1RyYW5zYWN0aW9uIjt9fQ==', 1734109001),
-('sOnHleFoRebj4egmxxQqxOIWACx7v8KchHPIXRtn', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiQklaVmhNczhheGF2clJwUTNocEVkYnl3RWJvaW8ydkE5Z28yb1JoZSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czoyNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL0hvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=', 1734107505);
+('D10J6qRuAQb4QmzS3pXTxe06aN4TXAVUTZXhFzTp', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiakVwa3VJanlId1RTb1A2N1ZiU1RRU1g1emtFZTJnMHUweDN2UU9TeiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319fQ==', 1734114472),
+('pPichaXXrvzlu4WjzwhNSAmlo4DEgQmzp4CgZpMW', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiUWg4MXdna1lCME1GR3hLVmwwVWFQd25WR3JyZFdSekJxMk5WdUNOMCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJuZXciO2E6MDp7fXM6Mzoib2xkIjthOjA6e319fQ==', 1734114482);
 
 -- --------------------------------------------------------
 
@@ -167,8 +164,8 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`id`, `id_order`, `payment_method`, `amount`, `bukti_tf`, `status`, `payment_date`, `catatan`, `created_at`, `updated_at`) VALUES
-(2, 17, 'bank_transfer', 3000000.00, '/storage/uploads/bukti_tf/EzC7LElXtF-2024-12-13.jpeg', 1, '2024-12-13 20:31:00', 'Ini bukti Macam apa', '2024-12-13 12:31:00', NULL),
-(3, 20, 'bank_transfer', 4000000.00, '/storage/uploads/bukti_tf/TVmFH57X47-2024-12-13.jpg', 0, '2024-12-13 23:16:46', '', '2024-12-13 14:16:46', NULL);
+(4, 22, 'bank_transfer', '1000000.00', '/storage/uploads/bukti_tf/xSCcL8pw1o-2024-12-14.jpeg', 1, '2024-12-14 03:09:33', 'Stok Barang Sudah Habis', '2024-12-13 19:09:33', NULL),
+(5, 23, 'bank_transfer', '3000000.00', '/storage/uploads/bukti_tf/XRCc11aJtM-2024-12-14.jpeg', 2, '2024-12-14 03:24:03', NULL, '2024-12-13 19:24:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -271,7 +268,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -283,7 +280,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`

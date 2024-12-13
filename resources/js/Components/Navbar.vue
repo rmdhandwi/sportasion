@@ -361,6 +361,12 @@ const logout = () => {
                     value="Menunggu Konfirmasi Admin"
                     severity="warn"
                 />
+                <Tag
+                    v-if="cart.status === 3"
+                    value="Pesanan Ditolak"
+                    severity="danger"
+                />
+                <span v-if="cart.catatan" class="capitalize">*Catatan : {{ cart.catatan }}</span>
             </div>
             <div class="flex flex-wrap items-center gap-2">
                 <div class="flex flex-col w-[16rem]">
@@ -437,7 +443,7 @@ const logout = () => {
                         "
                     />
                     <Button
-                        v-if="cart.status === 2"
+                        v-if="cart.status === 2 || cart.status === 3"
                         label="Pesan Sekarang"
                         severity="success"
                         @click="
@@ -448,7 +454,7 @@ const logout = () => {
                         "
                     />
                     <Button
-                        v-if="cart.status === 2"
+                        v-if="cart.status === 2 || cart.status === 3"
                         label="Hapus"
                         severity="danger"
                         @click="
@@ -501,6 +507,12 @@ const logout = () => {
                     value="Silahkan Upload Bukti Pembayaran"
                     severity="warn"
                 />
+                <Tag
+                    v-if="transaksi.transaksi[0]?.status == 1"
+                    value="Pembayaran Ditolak"
+                    severity="danger"
+                />
+                <span v-if="transaksi.transaksi[0]?.catatan">*{{ transaksi.transaksi[0]?.catatan }}</span>
             </div>
             <div class="flex flex-wrap items-center gap-y-2 gap-x-8">
                 <div class="flex flex-col w-[12rem]">
@@ -563,7 +575,7 @@ const logout = () => {
                         <Select
                             fluid
                             class="w-full"
-                            :disabled="transaksi.transaksi.length > 0"
+                            :disabled="transaksi.transaksi[0]?.status === 2"
                             v-model="formTransaksi.metode_bayar"
                             :options="metodeBayar"
                             optionLabel="metode"
