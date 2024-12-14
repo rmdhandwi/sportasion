@@ -105,7 +105,7 @@ const Logout = () => {
                     ]"
                 >
                     <i class="pi pi-chart-bar"></i>
-                    <span>Orders</span>
+                    <span>Transaction</span>
                 </Button>
                 <hr />
                 <Button
