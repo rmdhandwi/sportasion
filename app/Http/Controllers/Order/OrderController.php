@@ -18,6 +18,9 @@ class OrderController extends Controller
         $produk = products::find($req->id_product);
         $order = Order::where('id_product', $req->id_product)->where('id_user', auth()->guard()->user()->id)->where('status', 2)->get();
 
+        dd($produk->price * $req->quantity);
+
+
         if (!$order->isEmpty()) {
 
             $order[0]->quantity += $req->quantity;
@@ -58,8 +61,10 @@ class OrderController extends Controller
     public function updateOrder(Request $req)
     {
         $order = Order::find($req->id_cart);
+        $produk = products::find($order->id_product);
+        
         $order->quantity = $req->quantity;
-        $order->total_price = $order->price * $order->quantity;
+        $order->total_price = $produk->price * $order->quantity;
         $insertOrder = $order->save();
 
         if ($insertOrder) {
