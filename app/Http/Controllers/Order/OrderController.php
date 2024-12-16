@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function addOrder(Request $req)
     {
         $produk = products::find($req->id_product);
-        $order = Order::where('id_product', $req->id_product)->where('status', 2)->get();
+        $order = Order::where('id_product', $req->id_product)->where('id_user', auth()->guard()->user()->id)->where('status', 2)->get();
 
         if (!$order->isEmpty()) {
 
